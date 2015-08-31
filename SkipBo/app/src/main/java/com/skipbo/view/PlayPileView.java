@@ -1,5 +1,7 @@
 package com.skipbo.view;
 
+import android.util.Log;
+
 import com.skipbo.model.PlayPile;
 
 /**
@@ -10,8 +12,8 @@ public class PlayPileView extends Card{
     private PlayPile p;
     private int number;
 
-    public PlayPileView(PlayPile p, int number, int width, int height, CardDecoder decoder){
-        super(((number%2)*(PADDING+WIDTH)),((int)(number/2))*(HEIGHT+PADDING),number, decoder, p.getTeller());
+    public PlayPileView(PlayPile p, int number, CardDecoder decoder){
+        super(((number%2)*(PADDING+decoder.getCardWidth())),((int)(number/2))*(decoder.getCardHeight()+PADDING),number, decoder, p.getTeller());
         this.p = p;
         this.number = number;
         //this.currentValue = p.getTeller();

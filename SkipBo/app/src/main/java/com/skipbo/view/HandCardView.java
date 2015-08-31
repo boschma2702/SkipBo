@@ -1,5 +1,9 @@
 package com.skipbo.view;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+
+import com.skipbo.model.HumanPlayer;
 import com.skipbo.model.Player;
 
 /**
@@ -9,20 +13,22 @@ public class HandCardView extends MoveableCard {
 
     private int positionNumber;
     //private int value;
-    private Player player;
+    private Player humanPlayer;
+    private Bitmap backCard;
 
-    public HandCardView(int value, int positionNumber, Player player, int width, int height, CardDecoder decoder) {
-        super(positionNumber*(PADDING + WIDTH)+200, (int)(width-(320*(decoder.getScale()))), positionNumber, decoder, value);
+    public HandCardView(int value, int positionNumber, Player humanPlayer, CardDecoder decoder) {
+        super(positionNumber*(PADDING + decoder.getCardWidth()), (int)(decoder.getScreenHeight()-decoder.getCardHeight()), positionNumber, decoder, value);
         //this.currentValue = value;
-        this.player = player;
+        this.humanPlayer = humanPlayer;
         this.positionNumber = positionNumber;
+        backCard = decoder.getStandardBitmap(CardDecoder.BACK);
         setMoveAble();
     }
 
     @Override
     public int getCurrentValue() {
         //Log.e("waarde", "Handcard waarde is "+player.getHandcards().get(positionNumber));
-        return player.getHandcards().get(positionNumber);
+        return humanPlayer.getHandcards().get(positionNumber);
     }
     /*
     public void setValue(int value){
@@ -40,6 +46,13 @@ public class HandCardView extends MoveableCard {
     }
 
 
+    public void onDrawEmpty(Canvas c){
+        if(getCurrentValue()==-1){
+            c.drawBitmap(emptyPNG, startx, starty, null);
+        }else {
+            c.drawBitmap(backCard, startx, starty, null);
+        }
+    }
 
     /*
     @Override

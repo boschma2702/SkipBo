@@ -1,5 +1,7 @@
 package com.skipbo.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +25,14 @@ public class PlayPile {
 	}
 	
 	public void addCard(int card){
-		//if(isPlaceable(card)==true){
-			cards.add(card);
-			teller ++;
-			if(teller == 12){
-				resetPile();
-			//}
+        if(card==0) {
+            cards.add(card);
+            teller++;
+        }else {
+            teller = card;
+        }
+		if(teller == 12){
+			resetPile();
 		}
 	}
 	

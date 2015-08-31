@@ -7,82 +7,75 @@ import com.skipbo.GameController;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
-	
-	private String name;
-	private CardPile cardpile;
-	private List<Integer> handcards;
-	private StockPile stockpile;
-	private boolean turnEnd;
-	private PutAwayPile[] putAwayPiles = new PutAwayPile[4];
-    private GameController gameController;
-    private PlayPile[] playPiles;
-	
-	public Player(String name, CardPile cardpile, GameController c, PlayPile[] playPiles){
-        this(name, cardpile,30, c, playPiles);
-	}
-	
-	public Player(String name, CardPile cardpile, int stockPileAmount, GameController c, PlayPile[] playPiles){
-		this.name = name;
-		this.cardpile = cardpile;
-		handcards = new ArrayList<Integer>();
-        handcards.addAll(cardpile.get5Cards());
-		this.cardpile = cardpile;
-		stockpile = new StockPile(cardpile, stockPileAmount);
-        this.gameController = c;
-		
+/**
+ * Created by reneb_000 on 20-4-2015.
+ */
+public abstract class Player {
 
-		putAwayPiles[0] = new PutAwayPile();
-		putAwayPiles[1] = new PutAwayPile();
-		putAwayPiles[2] = new PutAwayPile();
-		putAwayPiles[3] = new PutAwayPile();
-        this.playPiles = playPiles;
-
-	}
-	
-	
-	public boolean makeMove(){
-        gameController.makeMove();
-        //Log.e("test", "move ended");
-        if(handcards.contains(-1)) {
-            fillHand();
-            /*
-            for(int i =0; i<handcards.size(); i++){
-               Log.e("","handcards size is "+handcards.size());
-               if(handcards.get(i)==-1){
-                   //handcards.add(i, cardpile.getRandomCard());
-                    handcards.remove(i);
-               }
-           }
-        }
-        while(handcards.size()<=5){
-            handcards.add(cardpile.getRandomCard());
-        }*/
-        }
-        return false;
-	}
+    protected PlayPile[] playPiles;
+    protected PutAwayPile[] putAwayPiles = new PutAwayPile[4];
+    protected StockPile stockpile;
+    protected CardPile cardPile;
+    protected String name;
 
 
-    private void fillHand(){
-        List<Integer> l = new ArrayList<Integer>();
-        for(int i=0; i<handcards.size(); i++){
-            if(handcards.get(i)!=-1){
-                l.add(handcards.get(i));
-            }
-        }
-        while(l.size()<5){
-            l.add(cardpile.getRandomCard());
-        }
-        //handcards.clear();
-        //handcards.addAll(l);
-        handcards = l;
+    protected List<Integer> handcards;
+    //private StockPile stockPile;
+
+
+    public Player(){
+
     }
+
+    public Player(PlayPile[] playPiles, StockPile stockPile, String name, CardPile cardPile){
+        this.playPiles = playPiles;
+        //this.putAwayPiles = putAwayPiles;
+        this.stockpile = stockPile;
+        this.name = name;
+        putAwayPiles = new PutAwayPile[4];
+        this.cardPile = cardPile;
+        handcards = cardPile.getCards(5);
+        for (int i=0; i<putAwayPiles.length;i++){
+            putAwayPiles[i] = new PutAwayPile();
+        }
+    }
+
+    public void initPlayer(PlayPile[] playPiles, List<Integer> handcards, List<Integer> stockPile, CardPile cardPile){
+        this.playPiles = playPiles;
+        this.handcards = new ArrayList<>(handcards);
+        this.stockpile = new StockPile(stockPile);
+        this.cardPile = cardPile;
+        for (int i=0; i<putAwayPiles.length;i++){
+            putAwayPiles[i] = new PutAwayPile();
+        }
+        Log.e("TEST", "Player geinit, handcards value: "+this.handcards+"\nStockpile value: "+this.stockpile+"\nCardpile value: "+cardPile+"\nName: "+this.name);
+    }
+
+    public void initPlayer(PlayPile[] playPiles, StockPile stockPile, String name, CardPile cardPile){
+        this.playPiles = playPiles;
+        //this.putAwayPiles = putAwayPiles;
+        this.stockpile = stockPile;
+        this.name = name;
+        this.cardPile = cardPile;
+        handcards = cardPile.getCards(5);
+        for (int i=0; i<putAwayPiles.length;i++){
+            putAwayPiles[i] = new PutAwayPile();
+        }
+    }
+
+    public abstract void makeMove(GameController controller);
+
+    public String getName(){
+        return name;
+    }
+
 
     public boolean playStockPile(int number){
         if(playPiles[number].isPlaceable(stockpile.getCard())){
             playPiles[number].addCard(stockpile.playCard());
-            //return true;
-
+            if(hasWon()){
+                return true;
+            }
         }
         return false;
     }
@@ -92,17 +85,12 @@ public class Player {
             playPiles[to].addCard(putAwayPiles[from].getCard());
             putAwayPiles[from].deleteCard();
         }
-
-
         return false;
     }
 
     public boolean playHandToPutAway(int hand, int pile){
         if(putAwayPiles[pile].addCard(handcards.get(hand))) {
             handcards.set(hand, -1);
-            //Log.e("run", "Hand card value: " + hand + " " + handcards.get(hand));
-            //Log.e("run", "waarde handcards " + handcards.toString());
-            //Log.e("run", "waarde putawaypile " + putAwayPiles[pile].getCards().toString());
             return true;
         }
         return false;
@@ -112,42 +100,71 @@ public class Player {
         if(playPiles[pile].isPlaceable(handcards.get(hand))){
             playPiles[pile].addCard(handcards.get(hand));
             handcards.set(hand, -1);
+            if(isHandEmpty()){
+                fillHand();
+            }
         }
         return false;
     }
 
-    public boolean swichtCard(int firstcard, int secondcard){
+    protected void fillHand(){
+        if(handcards.contains(-1)) {
+            List<Integer> newHand = new ArrayList<>();
+            for(int i=0;i<handcards.size();i++){
+                if(handcards.get(i)!=-1){
+                    newHand.add(handcards.get(i));
+                }
+            }
+            newHand.addAll(cardPile.getCards(5-newHand.size()));
+            handcards = newHand;
+        }
+    };
+
+    protected void refillHand(){
+        if(isHandEmpty()){
+           handcards = cardPile.getCards(5);
+        }
+    }
+
+    protected boolean isHandEmpty(){
+        for(int i=0;i<handcards.size();i++){
+            if(handcards.get(i)!=-1){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean switchCard(int firstcard, int secondcard){
         int tussenvar = handcards.get(firstcard);
         handcards.set(firstcard, handcards.get(secondcard));
         handcards.set(secondcard, tussenvar);
         return false;
     }
 
-	public void checkHand(){
-		if(handcards.size()==0){
-		while(handcards.size()<5){
-			handcards.add(cardpile.getRandomCard());
-		}}
-	}
-	
-	public String getName(){
-		return name;
-	}
-	
-	public List<Integer> getHandcards(){
-		return handcards;
-	}
-	
-	public void playCard(int card, PutAwayPile p){
-		p.addCard(card);
-	}
-	
-	public PutAwayPile[] getPutAwayPiles(){
-		return putAwayPiles;
-	}
-	
-	public StockPile getStockPile(){
-		return stockpile;
-	}
 
+    public PlayPile[] getPlayPiles() {
+        return playPiles;
+    }
+
+    public PutAwayPile[] getPutAwayPiles() {
+        return putAwayPiles;
+    }
+
+    public StockPile getStockpile() {
+        return stockpile;
+    }
+
+    public List<Integer> getHandcards() {
+        return handcards;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public boolean hasWon(){
+        return (stockpile.getAmount()==0);
+    }
 }

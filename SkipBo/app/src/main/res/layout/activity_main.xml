@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_main_menu"
+    tools:context="com.skipbo.menus.MainActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Local Game"
+        android:id="@+id/mainLocalButton"
+        android:onClick="toLocalMenu"
+        style="@style/FirstButton"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Online Game"
+        android:id="@+id/onlineButton"
+        android:onClick="toOnlineMenu"
+        style="@style/SecondButton"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test"
+        android:id="@+id/startTest"
+        style="@style/ThirdButton"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:id="@+id/mainJoinButton"
+        android:onClick="exit"
+        style="@style/FourthButton"/>
+</LinearLayout>
