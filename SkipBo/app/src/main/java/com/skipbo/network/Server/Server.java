@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.skipbo.GameController;
 import com.skipbo.R;
@@ -104,25 +105,39 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
         }
     }
 
-    public void addToLobby(String name, final boolean deleteable){
+    public void addToLobby(String name, final boolean deleteable, final ClientHandler clientHandler){
         Handler handler = new Handler(context.getMainLooper());
         final String n = name;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                lobby.addView(new LobbyEntry(context, n, deleteable));
+                lobby.addView(new LobbyEntry(context, n, deleteable, clientHandler));
             }
         };
         handler.post(runnable);
     }
 
-    public void deleteFromLobby(LobbyEntry toDelete){
+    public void clientLeaves(ClientHandler clientHandler){
+        final int place = clientHandlers.indexOf(clientHandler);
         Handler handler = new Handler(context.getMainLooper());
-        final LobbyEntry n = toDelete;
+        Toast.makeText(activity, "Player "+clientHandler.getName()+" has left", Toast.LENGTH_LONG);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                lobby.removeView(n);
+                lobby.removeView(lobby.getChildAt(place));
+            }
+        };
+        handler.post(runnable);
+    }
+
+    public void deleteFromLobby(final LobbyEntry toDelete){
+        toDelete.getClientHandler().sendMessage(CommandList.KICK_PLAYER);
+        clientHandlers.remove(toDelete.getClientHandler());
+        Handler handler = new Handler(context.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                lobby.removeView(toDelete);
             }
         };
         handler.post(runnable);

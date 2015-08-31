@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
     //TODO bugg with fill hand when server plays hand empty, client doesnt refill
     //TODO popup einde spel
     //TODO online customizable name
-    //TODO client server interaction   2805
+    //TODO client server interaction testing
 
 
 
@@ -124,7 +124,7 @@ public class MainActivity extends Activity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        infoView.setText("IP: "+ server.getIp()+" "+ "PORT: "+server.getSocket().getLocalPort());
+        infoView.setText("IP: " + server.getIp() + " " + "PORT: " + server.getSocket().getLocalPort());
         Button startGameButton = (Button)findViewById(R.id.serverStartGameButton);
         startGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
 
     public void addLobbyEntry(View v){
         String name = ((TextView)findViewById(R.id.localInput)).getText().toString();
-        LobbyEntry entry = new LobbyEntry(this, name, true);
+        LobbyEntry entry = new LobbyEntry(this, name, true, null);
         ((LinearLayout) findViewById(R.id.lobbyLinearLayout)).addView(entry);
         ((TextView)findViewById(R.id.localInput)).setText("");
     }
@@ -240,6 +240,27 @@ public class MainActivity extends Activity {
         setContentView(R.layout.menu_local);
     }
 
+    public void exitClient(View v){
+        client.shutDown();
+        setContentView(R.layout.menu_online);
+    }
+
+
+    public void connectToServer(View v){
+        String ip = ((EditText)findViewById(R.id.clientIPField)).getText().toString();
+        String name = ((EditText)findViewById(R.id.clientNameField)).getText().toString();
+
+        if(ip.isEmpty()){
+            Toast.makeText(this, "Please enter an IP address", Toast.LENGTH_LONG).show();
+        } else if(name.isEmpty()){
+            Toast.makeText(this, "Please enter an name", Toast.LENGTH_LONG).show();
+        }else{
+            client.connect(ip, name);
+        }
+
+    }
+
+
     public int getDPasPixels(int sizeInDp){
         float scale = getResources().getDisplayMetrics().density;
         return (int) (sizeInDp*scale + 0.5f);
@@ -252,6 +273,10 @@ public class MainActivity extends Activity {
     public int getScreenHeight(){
         return screenHeight;
     }
+
+
+
+
 
     @Override
     public void onBackPressed() {

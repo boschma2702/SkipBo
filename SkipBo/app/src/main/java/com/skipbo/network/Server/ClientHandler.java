@@ -70,7 +70,7 @@ public class ClientHandler extends Player implements Runnable {
                     name = s[1];
                     Log.e("TEST", "Name set: "+s[1]);
                     nameSet = true;
-                    server.addToLobby(name, true);
+                    server.addToLobby(name, true, this);
                 }
                 break;
             case CommandList.PLAY_HAND_HAND:
@@ -90,6 +90,9 @@ public class ClientHandler extends Player implements Runnable {
                 break;
             case CommandList.PLAY_PUTAWAYPILE:
                 this.playPutawayToPlayPile(Integer.parseInt(s[1]),Integer.parseInt(s[2]));
+                break;
+            case CommandList.LEAVE_LOBBY:
+                server.clientLeaves(this);
                 break;
 
         }
@@ -121,6 +124,10 @@ public class ClientHandler extends Player implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Server getServer(){
+        return server;
     }
 
 

@@ -1,3 +1,6 @@
 Skipbo2/*
 SkipBo/.idea/*
 *.iml
+.idea
+SkipBo/.idea/*
+.gradle/*

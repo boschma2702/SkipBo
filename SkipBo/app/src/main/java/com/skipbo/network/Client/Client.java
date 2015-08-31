@@ -8,8 +8,10 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.skipbo.GameController;
+import com.skipbo.R;
 import com.skipbo.model.Game;
 import com.skipbo.model.Player;
 import com.skipbo.network.NetworkPlayer;
@@ -55,36 +57,34 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
         this.activity = (Activity) context;
         this.screenwidht = screenwidht;
         this.screenheight = screenheight;
-        new Thread(this).start();
-        popup();
+        //new Thread(this).start();
+        //popup();
 
+
+    }
+
+    public void connect(String ip, String name){
+        try {
+            socket = new Socket(ip, Server.DEFAULT_PORT);
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            running = true;
+            sendMessage(CommandList.SEND_NAME$ + name);
+            new Thread(this).start();
+        } catch (IOException e) {
+            Toast.makeText(context, "Could not connect to server", Toast.LENGTH_LONG).show();
+        }
 
     }
 
 
     @Override
     public void run() {
-        synchronized (this) {
+        while (running) {
             try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                socket = new Socket(ip, Server.DEFAULT_PORT);
-                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
-                sendMessage(CommandList.SEND_NAME$ + name);
-                while (running) {
-                    try {
-                        String incoming = reader.readLine();
-                        Log.i(TAG, "Received: " + incoming);
-                        interpreter(incoming.split("\\$"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                String incoming = reader.readLine();
+                Log.i(TAG, "Received: " + incoming);
+                interpreter(incoming.split("\\$"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -132,7 +132,21 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
                     game.getCurrentPlayer().playPutawayToPlayPile(Integer.parseInt(s[1]), Integer.parseInt(s[2]));
                 }
                 break;
+            case CommandList.KICK_PLAYER:
+                this.kicked();
+                break;
         }
+    }
+
+    private void kicked() {
+        running = false;
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(activity, "You have been kicked", Toast.LENGTH_LONG);
+        activity.setContentView(R.layout.menu_online);
     }
 
     public void startGame(String[] s){
@@ -237,6 +251,7 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
         if(socket!=null){
             try {
                 running = false;
+                sendMessage(CommandList.LEAVE_LOBBY);
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();

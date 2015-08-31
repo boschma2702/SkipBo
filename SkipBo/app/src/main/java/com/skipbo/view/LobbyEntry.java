@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.skipbo.R;
 import com.skipbo.menus.MainActivity;
+import com.skipbo.network.Server.ClientHandler;
 
 /**
  * Created by reneb_000 on 22-7-2015.
@@ -21,10 +22,12 @@ import com.skipbo.menus.MainActivity;
 public class LobbyEntry extends LinearLayout {
 
     private String name;
+    private ClientHandler clientHandler;
 
-    public LobbyEntry(final MainActivity context, String name, boolean deletable) {
+    public LobbyEntry(final MainActivity context, String name, boolean deletable, final ClientHandler clientHandler) {
         super(context);
         this.name = name;
+        this.clientHandler = clientHandler;
         TextView text = new TextView(context);
         text.setTextColor(Color.parseColor("#000000"));
         text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
@@ -50,21 +53,33 @@ public class LobbyEntry extends LinearLayout {
             x.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
             x.setTypeface(null, Typeface.BOLD);
 
-            x.setPadding(0,0,60,0);
+            x.setPadding(0, 0, 60, 0);
 
             this.addView(x);
-
-            x.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    context.localRemoveFromLobby(LobbyEntry.this);
-                }
-            });
+            if(clientHandler==null) {
+                x.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        context.localRemoveFromLobby(LobbyEntry.this);
+                    }
+                });
+            }else{
+                x.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clientHandler.getServer().deleteFromLobby(LobbyEntry.this);
+                    }
+                });
+            }
         }
 
     }
 
     public String getName(){
         return name;
+    }
+
+    public ClientHandler getClientHandler(){
+        return clientHandler;
     }
 }

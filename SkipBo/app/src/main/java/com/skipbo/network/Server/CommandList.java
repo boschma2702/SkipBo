@@ -34,5 +34,10 @@ public class CommandList {
     public final static String SEND_CARDPILECARDS = "sc";
 
 
+    public final static String KICK_PLAYER$ = "kp$";
+    public final static String KICK_PLAYER = "kp";
+
+    public final static String LEAVE_LOBBY$ = "ll$";
+    public final static String LEAVE_LOBBY = "ll";
 
 }

@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            style="@style/Title"
             android:text="Server"
             android:id="@+id/textView2"/>
         </RelativeLayout>
@@ -32,17 +32,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        style="@style/SubTitle"
         android:text="Ip: Port:"
         android:id="@+id/serverInfoLabel"
         android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Lobby:"
-        android:id="@+id/serverLobbyView" />
+
 
     <LinearLayout
         android:orientation="vertical"
