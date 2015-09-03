@@ -60,6 +60,7 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         //addToLobby(name, false);
     }
 
@@ -115,6 +116,7 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
             }
         };
         handler.post(runnable);
+        listChanged();
     }
 
     public void clientLeaves(ClientHandler clientHandler){
@@ -128,6 +130,8 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
             }
         };
         handler.post(runnable);
+        clientHandlers.remove(clientHandler);
+        listChanged();
     }
 
     public void deleteFromLobby(final LobbyEntry toDelete){
@@ -141,6 +145,7 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
             }
         };
         handler.post(runnable);
+        listChanged();
     }
 
 
@@ -149,7 +154,7 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
     public void makeMove(GameController controller) {
         controller.makeMove();
         fillHand();
-        Log.e("TEST", "Turn "+name+" really finished");
+        Log.e("TEST", "Turn " + name + " really finished");
     }
 
     public void sendMessage(String msg){
@@ -194,5 +199,14 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
         }
         Log.e("TEST", "MasterString: "+master);
         return master;
+    }
+
+    private void listChanged(){
+        String tosend = CommandList.SEND_LOBBY$;
+        tosend +=name+"$";
+        for(int i=0;i<clientHandlers.size();i++){
+            tosend+=clientHandlers.get(i).getName()+"$";
+        }
+        sendMessage(tosend);
     }
 }
