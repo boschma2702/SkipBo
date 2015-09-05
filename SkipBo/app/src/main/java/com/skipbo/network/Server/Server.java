@@ -119,13 +119,14 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
         listChanged();
     }
 
-    public void clientLeaves(ClientHandler clientHandler){
+    public void clientLeaves(final ClientHandler clientHandler){
         final int place = clientHandlers.indexOf(clientHandler);
         Handler handler = new Handler(context.getMainLooper());
-        Toast.makeText(activity, "Player "+clientHandler.getName()+" has left", Toast.LENGTH_LONG);
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                Toast.makeText(activity, "Player "+clientHandler.getName()+" has left", Toast.LENGTH_LONG).show();
                 lobby.removeView(lobby.getChildAt(place));
             }
         };
@@ -208,5 +209,9 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
             tosend+=clientHandlers.get(i).getName()+"$";
         }
         sendMessage(tosend);
+    }
+
+    public int getPlayersCount(){
+        return clientHandlers.size()+1;
     }
 }

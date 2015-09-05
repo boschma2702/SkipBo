@@ -103,8 +103,10 @@ public class ClientHandler extends Player implements Runnable {
         try {
             while(running) {
                 String incomming = reader.readLine();
-                Log.i(TAG, "Received: " + incomming);
-                interpreter(incomming.split("\\$"));
+                if(incomming!=null) {
+                    Log.i(TAG, "Received: " + incomming);
+                    interpreter(incomming.split("\\$"));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

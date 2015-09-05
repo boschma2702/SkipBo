@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -30,6 +31,8 @@ import com.skipbo.network.Server.Server;
 import com.skipbo.view.BossView;
 import com.skipbo.view.LobbyEntry;
 
+import java.io.IOException;
+
 public class MainActivity extends Activity {
 
     //TODO menu for client when joining, more then 2 player multiplayer,
@@ -39,7 +42,7 @@ public class MainActivity extends Activity {
     //TODO bugg with fill hand when server plays hand empty, client doesnt refill
     //TODO popup einde spel
     //TODO online customizable name
-    //TODO client server interaction testing
+
 
 
 
@@ -129,7 +132,11 @@ public class MainActivity extends Activity {
         startGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                server.startGame();
+                if(server.getPlayersCount()<2){
+                    Toast.makeText(MainActivity.this, "You need at least 2 players", Toast.LENGTH_LONG);
+                }else {
+                    server.startGame();
+                }
             }
         });
     }
@@ -225,6 +232,7 @@ public class MainActivity extends Activity {
 
     public void toJoinMenu(View v){
         client = new Client(MainActivity.this, screenWidht, screenHeight);
+        setContentView(R.layout.client_layout);
     }
 
     public void exitCampaign(View v){
@@ -255,7 +263,16 @@ public class MainActivity extends Activity {
         } else if(name.isEmpty()){
             Toast.makeText(this, "Please enter an name", Toast.LENGTH_LONG).show();
         }else{
+
             client.connect(ip, name);
+            LinearLayout layout = ((LinearLayout)findViewById(R.id.clientLinContainer));
+            layout.removeAllViews();
+            LinearLayout lobby = new LinearLayout(this);
+            lobby.setOrientation(LinearLayout.VERTICAL);
+            lobby.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT));
+            layout.addView(lobby);
+            client.setLobby(lobby);
+
         }
 
     }

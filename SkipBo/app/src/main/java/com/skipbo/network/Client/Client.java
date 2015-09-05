@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.skipbo.GameController;
 import com.skipbo.R;
+import com.skipbo.menus.MainActivity;
 import com.skipbo.model.Game;
 import com.skipbo.model.Player;
 import com.skipbo.network.NetworkPlayer;
@@ -19,6 +20,7 @@ import com.skipbo.network.Sendable;
 import com.skipbo.network.Server.CommandList;
 import com.skipbo.network.Server.InterperterClient;
 import com.skipbo.network.Server.Server;
+import com.skipbo.view.LobbyEntry;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,12 +38,12 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
 
     private String ip;
 
-    private Context context;
+    private MainActivity context;
     private Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;
     private boolean running = true;
-    private Activity activity;
+    //private Activity activity;
     private int screenwidht, screenheight;
     private OnlineCardPile onlineCardPile;
 
@@ -49,12 +51,12 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
     private Game game;
 
     private boolean gameStarted = false;
-    private InterperterClient interperterClient;
+    private LinearLayout lobby;
 
-    public Client(Context context, int screenwidht, int screenheight){
-        interperterClient = new InterperterClient(this);
+    public Client(MainActivity context, int screenwidht, int screenheight){
+        //interperterClient = new InterperterClient(this);
         this.context = context;
-        this.activity = (Activity) context;
+        //this.activity = (Activity) context;
         this.screenwidht = screenwidht;
         this.screenheight = screenheight;
         //new Thread(this).start();
@@ -64,27 +66,39 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
     }
 
     public void connect(String ip, String name){
-        try {
-            socket = new Socket(ip, Server.DEFAULT_PORT);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            running = true;
-            sendMessage(CommandList.SEND_NAME$ + name);
-            new Thread(this).start();
-        } catch (IOException e) {
-            Toast.makeText(context, "Could not connect to server", Toast.LENGTH_LONG).show();
-        }
+        this.ip = ip;
+        this.name = name;
+
+        new Thread(this).start();
+
 
     }
 
 
     @Override
     public void run() {
+        try {
+            socket = new Socket(ip, Server.DEFAULT_PORT);
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            running = true;
+            sendMessage(CommandList.SEND_NAME$ + name);
+        } catch (IOException e) {
+            running = false;
+            Toast.makeText(context, "Could not connect to server", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+
+        }
+
+
+
         while (running) {
             try {
                 String incoming = reader.readLine();
-                Log.i(TAG, "Received: " + incoming);
-                interpreter(incoming.split("\\$"));
+                if(incoming!=null) {
+                    Log.i(TAG, "Received: " + incoming);
+                    interpreter(incoming.split("\\$"));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -135,7 +149,29 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
             case CommandList.KICK_PLAYER:
                 this.kicked();
                 break;
+            case CommandList.SEND_LOBBY:
+                this.fillLobby(s);
+                break;
         }
+    }
+
+    private void fillLobby(final String[] s) {
+        Handler handler = new Handler(context.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                lobby.removeAllViews();
+                for(int i =1;i<s.length;i++){
+                    addToLobby(s[i]);
+                }
+            }
+        };
+        handler.post(runnable);
+
+    }
+
+    private void addToLobby(String s){
+        lobby.addView(new LobbyEntry(context, s, false, null));
     }
 
     private void kicked() {
@@ -145,8 +181,17 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Toast.makeText(activity, "You have been kicked", Toast.LENGTH_LONG);
-        activity.setContentView(R.layout.menu_online);
+        Handler handler = new Handler(context.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "You have been kicked", Toast.LENGTH_LONG).show();
+                context.setContentView(R.layout.menu_online);
+            }
+        };
+        handler.post(runnable);
+
+
     }
 
     public void startGame(String[] s){
@@ -191,7 +236,7 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                activity.setContentView(controller.getView());
+                context.setContentView(controller.getView());
             }
         };
         handler.post(runnable);
@@ -293,9 +338,7 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
         return running;
     }
 
-    public Activity getActivity() {
-        return activity;
-    }
+
 
     public int getScreenwidht() {
         return screenwidht;
@@ -311,5 +354,9 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
 
     public Game getGame() {
         return game;
+    }
+
+    public void setLobby(LinearLayout lobby) {
+        this.lobby = lobby;
     }
 }
