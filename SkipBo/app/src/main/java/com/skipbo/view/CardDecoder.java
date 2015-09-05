@@ -15,7 +15,7 @@ public class CardDecoder {
 
     private Context context;
     private Bitmap[] standardCards;
-    private Bitmap[] resizedCards;
+    //private Bitmap[] resizedCards;
 
     private Matrix matrix;
     private float scale;
@@ -48,8 +48,8 @@ public class CardDecoder {
         Bitmap b;
         for(int i = 0;i<=14; i++){
             b=getBitMap(i);
-            Log.e("TEST", "bmp width: "+b.getWidth()+" height: "+b.getHeight());
-            Log.e("SIZE","Scale "+scale);
+            //Log.e("TEST", "bmp width: "+b.getWidth()+" height: "+b.getHeight());
+            //Log.e("SIZE","Scale "+scale);
             standardCards[i] = Bitmap.createBitmap(b, 0,0,b.getWidth(),b.getHeight(),matrix,false);
         }
         cardHeight = standardCards[0].getHeight();

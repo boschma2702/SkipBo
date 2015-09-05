@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.skipbo.menus.MainActivity;
 import com.skipbo.model.Game;
 import com.skipbo.model.HumanPlayer;
 import com.skipbo.model.Player;
@@ -56,7 +57,8 @@ public class GameView extends SurfaceView implements Runnable {
         screenWidht = width;
         screenHeight = height;
 
-        CardDecoder decoder = new CardDecoder(context, (float)width/initW, width, height);
+        //CardDecoder decoder = new CardDecoder(context, (float)width/initW, width, height);
+        CardDecoder decoder = MainActivity.cardDecoder;
 
         humanPlayers = g.getPlayers();
         for(int x = 0; x< humanPlayers.length; x++) {
@@ -90,7 +92,8 @@ public class GameView extends SurfaceView implements Runnable {
         float w = (float)width/(float)2;
         float winit = initW;
         float result = w/winit;
-        resizedDecoder = new CardDecoder(context,result,width,height);
+        //resizedDecoder = new CardDecoder(context,result,width,height);
+        resizedDecoder = MainActivity.resizedCardDecoder;
         Player[] humanPlayers = g.getPlayers();
         for(int x=0; x< humanPlayers.length;x++){
             //int y = x*cd.getCardHeight()+50;//50 is padding

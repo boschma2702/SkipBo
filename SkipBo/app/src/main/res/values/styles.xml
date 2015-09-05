@@ -67,6 +67,13 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="normalText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
     <style name="backButton">
         <item name="android:background">@null</item>

@@ -47,7 +47,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:text="Ip"
+                    style="@style/normalText"
                     android:id="@+id/textView4"
                     android:width="100dp"/>
 
@@ -64,7 +66,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:text="Name"
+                    style="@style/normalText"
                     android:id="@+id/textView5" />
 
 
@@ -83,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Connect"
-            android:layout_gravity="center"
+            style="@style/ThirdButton"
             android:onClick="connectToServer"
             android:id="@+id/clientConnectButton" />
     </LinearLayout>

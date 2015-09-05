@@ -29,17 +29,17 @@ import com.skipbo.model.players.BossInfo;
 import com.skipbo.network.Client.Client;
 import com.skipbo.network.Server.Server;
 import com.skipbo.view.BossView;
+import com.skipbo.view.CardDecoder;
 import com.skipbo.view.LobbyEntry;
 
 import java.io.IOException;
 
 public class MainActivity extends Activity {
 
-    //TODO menu for client when joining, more then 2 player multiplayer,
+    //TODO more then 2 player multiplayer,
     // background ingame, settings page, bosses need to be unlocked,
     // more bosses, proper display for smaller screen devices, sideview putawaypiles expandle,
     // boss menu look, tutorial
-    //TODO bugg with fill hand when server plays hand empty, client doesnt refill
     //TODO popup einde spel
     //TODO online customizable name
 
@@ -55,7 +55,8 @@ public class MainActivity extends Activity {
     private GameController controller;
     private Client client;
 
-
+    public static CardDecoder cardDecoder;
+    public static CardDecoder resizedCardDecoder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +85,8 @@ public class MainActivity extends Activity {
             screenWidht = p.y;
             screenHeight = p.x;
         }
-
+        cardDecoder = new CardDecoder(this, 1, screenWidht, screenHeight);
+        resizedCardDecoder = new CardDecoder(this, (float)0.5,screenWidht, screenHeight);
         Log.e("TEST", "width: "+screenWidht+" Height: "+screenHeight);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_in);
         findViewById(R.id.onlineButton).startAnimation(animation);
@@ -133,7 +135,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(server.getPlayersCount()<2){
-                    Toast.makeText(MainActivity.this, "You need at least 2 players", Toast.LENGTH_LONG);
+                    Toast.makeText(MainActivity.this, "You need at least 2 players", Toast.LENGTH_LONG).show();
                 }else {
                     server.startGame();
                 }

@@ -85,7 +85,15 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
             sendMessage(CommandList.SEND_NAME$ + name);
         } catch (IOException e) {
             running = false;
-            Toast.makeText(context, "Could not connect to server", Toast.LENGTH_LONG).show();
+            Handler handler = new Handler(context.getMainLooper());
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Could not connect to server", Toast.LENGTH_LONG).show();
+                }
+            };
+            handler.post(runnable);
+
             e.printStackTrace();
 
         }
