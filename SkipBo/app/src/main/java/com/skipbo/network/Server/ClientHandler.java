@@ -63,7 +63,7 @@ public class ClientHandler extends Player implements Runnable {
     }
 
     //TODO only works with 2 players, move needs to be send to all peers.
-    private void interpreter(String[] s){
+    private void interpreter(String[] s, String entireMSG){
         switch (s[0]){
             case CommandList.SEND_NAME:
                 if(!nameSet) {
@@ -75,21 +75,26 @@ public class ClientHandler extends Player implements Runnable {
                 break;
             case CommandList.PLAY_HAND_HAND:
                 this.switchCard(Integer.parseInt(s[1]), Integer.parseInt(s[2]));
+                server.sendToOthers(this, entireMSG);
                 break;
             case CommandList.PLAY_HAND_PLAYPILE:
                 this.playHandToPlayPile(Integer.parseInt(s[1]),Integer.parseInt(s[2]));
+                server.sendToOthers(this, entireMSG);
                 break;
             case CommandList.PLAY_STOCKPILE:
                 this.playStockPile(Integer.parseInt(s[1]));
+                server.sendToOthers(this, entireMSG);
                 break;
             case CommandList.PLAY_HAND_PUTAWAYPILE:
                 this.playHandToPutAway(Integer.parseInt(s[1]),Integer.parseInt(s[2]));
+                server.sendToOthers(this, entireMSG);
                 synchronized (this){
                     notifyAll();
                 }
                 break;
             case CommandList.PLAY_PUTAWAYPILE:
                 this.playPutawayToPlayPile(Integer.parseInt(s[1]),Integer.parseInt(s[2]));
+                server.sendToOthers(this, entireMSG);
                 break;
             case CommandList.LEAVE_LOBBY:
                 server.clientLeaves(this);
@@ -105,7 +110,7 @@ public class ClientHandler extends Player implements Runnable {
                 String incomming = reader.readLine();
                 if(incomming!=null) {
                     Log.i(TAG, "Received: " + incomming);
-                    interpreter(incomming.split("\\$"));
+                    interpreter(incomming.split("\\$"), incomming);
                 }
             }
         } catch (IOException e) {

@@ -36,12 +36,12 @@ import java.io.IOException;
 
 public class MainActivity extends Activity {
 
-    //TODO more then 2 player multiplayer,
+    //TODO more then 2 player multiplayer (need to be tested)
     // background ingame, settings page, bosses need to be unlocked,
     // more bosses, proper display for smaller screen devices, sideview putawaypiles expandle,
     // boss menu look, tutorial
     //TODO popup einde spel
-    //TODO online customizable name
+    //TODO online host customizable name
 
 
 

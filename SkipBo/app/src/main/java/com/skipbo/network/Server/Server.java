@@ -214,4 +214,14 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
     public int getPlayersCount(){
         return clientHandlers.size()+1;
     }
+
+    public void sendToOthers(ClientHandler clientHandler, String s) {
+        List<ClientHandler> toSend = new ArrayList<>();
+        toSend.addAll(clientHandlers);
+        toSend.remove(clientHandler);
+
+        for(int i=0; i<toSend.size();i++){
+            toSend.get(i).sendMessage(s);
+        }
+    }
 }
