@@ -1,6 +1,8 @@
 package com.skipbo.menus;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,13 +20,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.skipbo.GameController;
 import com.skipbo.R;
+import com.skipbo.Utils.Settings;
 import com.skipbo.model.players.BossInfo;
 import com.skipbo.network.Client.Client;
 import com.skipbo.network.Server.Server;
@@ -37,11 +42,13 @@ import java.io.IOException;
 public class MainActivity extends Activity {
 
     //TODO more then 2 player multiplayer (need to be tested)
-    // background ingame, settings page, bosses need to be unlocked,
+    // background ingame, bosses need to be unlocked,
     // more bosses, proper display for smaller screen devices, sideview putawaypiles expandle,
     // boss menu look, tutorial
     //TODO popup einde spel
     //TODO online host customizable name
+    //TODO name change Skip-ba
+    //TODO code cleanup
 
 
 
@@ -57,12 +64,15 @@ public class MainActivity extends Activity {
 
     public static CardDecoder cardDecoder;
     public static CardDecoder resizedCardDecoder;
+    public static Settings settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.requestWindowFeature(Window.FEATURE_ACTION_BAR);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(
@@ -85,8 +95,11 @@ public class MainActivity extends Activity {
             screenWidht = p.y;
             screenHeight = p.x;
         }
+
         cardDecoder = new CardDecoder(this, 1, screenWidht, screenHeight);
         resizedCardDecoder = new CardDecoder(this, (float)0.5,screenWidht, screenHeight);
+        settings = new Settings(this);
+
         Log.e("TEST", "width: "+screenWidht+" Height: "+screenHeight);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_in);
         findViewById(R.id.onlineButton).startAnimation(animation);
@@ -94,28 +107,22 @@ public class MainActivity extends Activity {
         findViewById(R.id.mainJoinButton).startAnimation(animation);
         findViewById(R.id.mainLocalButton).startAnimation(animation);
 
+        Log.e("TEST", ""+settings.getFirstLaunch());
+        if(settings.getFirstLaunch()){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-
-        Button start = (Button)findViewById(R.id.startTest);
-        start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller = new GameController(new String[]{"Astrid","René"}, MainActivity.this, screenWidht, screenHeight, 30);
-                setContentView(controller.getView());
-                //MainView view = new MainView(MainActivity.this, new String[]{"Astrid","René"}, p.x, p.y);
-                //setContentView(view);
-            }
-        });
-
-        /*
-        Button join = (Button)findViewById(R.id.mainJoinButton);
-        join.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Client(MainActivity.this, screenWidht, screenHeight);
-            }
-        });*/
-
+            builder.setMessage("This is the first time you open the app. If you are not familiar with the game or not sure on how to play with other players, check out the tutorial page");
+            builder.setTitle("First launch");
+            builder.setNeutralButton("I got it", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    settings.setFirstLaunch();
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
 
 
 
@@ -180,7 +187,7 @@ public class MainActivity extends Activity {
                 players[i] = (((LobbyEntry) lin.getChildAt(i)).getName());
             }
             int stockpileAmount = Integer.parseInt(((EditText)findViewById(R.id.localStockpileAmount)).getText().toString());
-            GameController controller = new GameController(players, this, screenWidht, screenHeight, stockpileAmount);
+            controller = new GameController(players, this, screenWidht, screenHeight, stockpileAmount);
             this.setContentView(controller.getView());
         }
     }
@@ -235,6 +242,18 @@ public class MainActivity extends Activity {
     public void toJoinMenu(View v){
         client = new Client(MainActivity.this, screenWidht, screenHeight);
         setContentView(R.layout.client_layout);
+    }
+
+    public void toSettingsMenu(View v){
+        setContentView(R.layout.menu_settings);
+        Switch s = (Switch)findViewById(R.id.settingsVibrate);
+        s.setChecked(settings.getVibrate());
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.setVibrate(isChecked);
+            }
+        });
     }
 
     public void exitCampaign(View v){

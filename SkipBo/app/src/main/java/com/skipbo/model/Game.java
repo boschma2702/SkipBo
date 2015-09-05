@@ -3,6 +3,7 @@ package com.skipbo.model;
 import android.view.View;
 
 import com.skipbo.GameController;
+import com.skipbo.menus.MainActivity;
 import com.skipbo.model.CardPile;
 import com.skipbo.model.Game;
 import com.skipbo.model.PlayPile;
@@ -24,10 +25,12 @@ public class Game implements Runnable{
     private boolean gameover = false;
     private int playercount;
     private GameController gameController;
+    private boolean vibrate;
 
 
     public Game(Player[] players, CardPile cardPile, GameController gameController, PlayPile[] playPiles){
         this.players = players;
+        vibrate = MainActivity.settings.getVibrate();
         //this.cardPile = cardPile;
         /*
         playPiles[0] = new PlayPile(cardPile);
@@ -77,7 +80,9 @@ public class Game implements Runnable{
             players[current].makeMove(gameController);
             current = (current + 1) % playercount;
             if(!(players[current] instanceof ClientHandler || players[current] instanceof StubPlayer || players[current] instanceof ComputerPlayer)){
-                gameController.vibrate();
+                if(vibrate) {
+                    gameController.vibrate();
+                }
             }
         }
     }
