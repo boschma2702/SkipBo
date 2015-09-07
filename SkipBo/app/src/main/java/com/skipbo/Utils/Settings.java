@@ -3,6 +3,7 @@ package com.skipbo.Utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  * Created by reneb_000 on 5-9-2015.

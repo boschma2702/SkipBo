@@ -30,7 +30,6 @@ public class AssPlayer extends ComputerPlayer {
         int tobeat = next.getStockpile().getCard();
         while (playing&&!hasWon()){
             for(int i=0; i<playPiles.length; i++){
-                //TODO FIX, doenst work, rework needed
 
                 if(tobeat - playPiles[i].getTeller()<=thresHold){
                     Log.e("TEST", "Hand: "+handcards);

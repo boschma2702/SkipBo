@@ -246,6 +246,13 @@ public class MainActivity extends Activity {
 
     public void toSettingsMenu(View v){
         setContentView(R.layout.menu_settings);
+
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_in);
+        findViewById(R.id.settingsVibrate).startAnimation(animation);
+        findViewById(R.id.mainJoinButton).startAnimation(animation);
+
+
+
         Switch s = (Switch)findViewById(R.id.settingsVibrate);
         s.setChecked(settings.getVibrate());
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

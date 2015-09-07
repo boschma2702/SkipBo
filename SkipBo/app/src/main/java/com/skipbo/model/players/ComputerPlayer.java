@@ -120,6 +120,25 @@ public abstract class ComputerPlayer extends Player {
     }
 
     /**
+     * Plays if possible the stockpile card to the first location
+     * @return true if stockpile card was played
+     */
+    public boolean playStockPile(){
+        if(stockpile.getCard()!=0) {
+            for (int i = 0; i < playPiles.length; i++) {
+                if (stockpilePlayable(i)) {
+                    playStockPile(i);
+                    return true;
+                }
+            }
+        }else{
+            playStockPile(new Random().nextInt(putAwayPiles.length));
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Checks if putawaypiles contains the card, if so returns the position of the card
      * @param card value needs to be checked
      * @return the position if card is available, if not -1
