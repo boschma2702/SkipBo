@@ -12,6 +12,7 @@ import com.skipbo.network.Server.InterperterClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.TreeSet;
 
 /**
  * Created by reneb_000 on 15-8-2015.
@@ -104,6 +105,15 @@ public abstract class ComputerPlayer extends Player {
             }
         }
         playHandToPutAway(highest, pile);
+    }
+
+    public boolean isHandCardPlayable(int cardPos){
+        for(int i=0; i<playPiles.length; i++){
+            if(handToPutAwayPlayable(cardPos, i)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -262,10 +272,10 @@ public abstract class ComputerPlayer extends Player {
      * @param putawayPile the putawaypile needed to be checked
      * @return list containing all the cards needed
      */
-    public List<Integer> getCardsNeeded(int putawayPile){
+    public List<Integer> getCardsNeeded(Player player, int putawayPile){
         List<Integer> list = new ArrayList<>();
-        int stock = this.getStockpile().getCard();
-        int put = putAwayPiles[putawayPile].getCard();
+        int stock = player.getStockpile().getCard();
+        int put = player.getPutAwayPiles()[putawayPile].getCard();
         int counter = put;
         if(stock>put){
             while(counter<stock){
@@ -279,6 +289,10 @@ public abstract class ComputerPlayer extends Player {
             }
         }
         return list;
+    }
+
+    public List<Integer> getCardsNeeded(int putawayPile){
+        return getCardsNeeded(this, putawayPile);
     }
 
     /**
@@ -301,6 +315,7 @@ public abstract class ComputerPlayer extends Player {
         }
         return list;
     }
+
 
 
 
