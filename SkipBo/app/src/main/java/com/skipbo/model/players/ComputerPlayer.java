@@ -5,6 +5,7 @@ import android.util.Log;
 import com.skipbo.model.LocalCardPile;
 import com.skipbo.model.PlayPile;
 import com.skipbo.model.Player;
+import com.skipbo.model.PutAwayPile;
 import com.skipbo.model.StockPile;
 import com.skipbo.network.Server.InterperterClient;
 
@@ -196,6 +197,7 @@ public abstract class ComputerPlayer extends Player {
         List<Integer> cards = new ArrayList<>();
         for(int i=0; i<putAwayPiles.length; i++){
             cards.add(putAwayPiles[i].getCard());
+            cards.addAll(this.getPutawayBehindFirst(putAwayPiles[i]));
         }
         cards.addAll(handcards);
         cards.add(stockpile.getCard());
@@ -253,6 +255,51 @@ public abstract class ComputerPlayer extends Player {
             }
         }
         return counter;
+    }
+
+    /**
+     * Returns a list containing the int values needed to play the stockpile given a putawaypile
+     * @param putawayPile the putawaypile needed to be checked
+     * @return list containing all the cards needed
+     */
+    public List<Integer> getCardsNeeded(int putawayPile){
+        List<Integer> list = new ArrayList<>();
+        int stock = this.getStockpile().getCard();
+        int put = putAwayPiles[putawayPile].getCard();
+        int counter = put;
+        if(stock>put){
+            while(counter<stock){
+                list.add(counter);
+                counter++;
+            }
+        }else{
+            while(counter!=stock){
+                list.add(counter);
+                counter = (counter+1)%13;
+            }
+        }
+        return list;
+    }
+
+    /**
+     * function retrieves all the cards that are 1 appart in the given putawaypile
+     * @param p the putawaypile to be checked
+     * @return list containing all the cards
+     */
+    public List<Integer> getPutawayBehindFirst(PutAwayPile p){
+        List<Integer> list = new ArrayList<>();
+        int card = p.getCard();
+        if(card!=-1) {
+            for (int i = p.getCards().size()-2; i > 0; i--) {
+                if(card+1==p.getCards().get(i)){
+                    list.add(p.getCards().get(i));
+                    card++;
+                }else {
+                    break;
+                }
+            }
+        }
+        return list;
     }
 
 
