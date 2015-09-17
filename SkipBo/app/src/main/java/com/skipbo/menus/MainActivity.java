@@ -41,7 +41,6 @@ import java.io.IOException;
 
 public class MainActivity extends Activity {
 
-    //TODO more then 2 player multiplayer (need to be tested)
     // background ingame, bosses need to be unlocked,
     // more bosses, proper display for smaller screen devices, sideview putawaypiles expandle,
     // boss menu look, tutorial
@@ -73,7 +72,7 @@ public class MainActivity extends Activity {
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -82,6 +81,7 @@ public class MainActivity extends Activity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
 
 
         setContentView(R.layout.activity_main);
@@ -107,10 +107,8 @@ public class MainActivity extends Activity {
         findViewById(R.id.mainJoinButton).startAnimation(animation);
         findViewById(R.id.mainLocalButton).startAnimation(animation);
 
-        Log.e("TEST", ""+settings.getFirstLaunch());
         if(settings.getFirstLaunch()){
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
             builder.setMessage("This is the first time you open the app. If you are not familiar with the game or not sure on how to play with other players, check out the tutorial page");
             builder.setTitle("First launch");
             builder.setNeutralButton("I got it", new DialogInterface.OnClickListener() {
@@ -124,6 +122,23 @@ public class MainActivity extends Activity {
             dialog.show();
         }
 
+
+
+        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener
+                (new View.OnSystemUiVisibilityChangeListener() {
+                    @Override
+                    public void onSystemUiVisibilityChange(int visibility) {
+                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                            getWindow().getDecorView().setSystemUiVisibility(
+                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                        }
+                    }
+                });
 
 
     }
@@ -235,7 +250,7 @@ public class MainActivity extends Activity {
         scrollView.addView(new BossView(this, bmp, BossInfo.BOSS1_NAME, BossInfo.BOSS1_DESC));
         scrollView.addView(new BossView(this, BitmapFactory.decodeResource(getResources(), R.drawable.boss_baby), BossInfo.BOSS2_NAME, BossInfo.BOSS2_DESC));
         scrollView.addView(new BossView(this, BitmapFactory.decodeResource(getResources(), R.drawable.boss_evil), BossInfo.BOSS3_NAME, BossInfo.BOSS3_DESC));
-        scrollView.addView(new BossView(this, bmp, "Second Boss", "This is the second boss"));
+        scrollView.addView(new BossView(this, BitmapFactory.decodeResource(getResources(), R.drawable.boss_normal), BossInfo.BOSS4_NAME, BossInfo.BOSS4_DESC));
 
     }
 

@@ -22,10 +22,10 @@ public class OnlineCardPile implements CardPile {
         Log.e("CARDPILE", "PLAYER ASKS NEW CARDS");
         synchronized (this){
             try {
-                Log.e("CARDPILE", "BEFORE WAITING");
-                waiting = true;
+                //Log.e("CARDPILE", "BEFORE WAITING");
+                //waiting = true;
                 wait();
-                waiting = false;
+                //waiting = false;
                 Log.e("CARDPILE", "AFTER WAITING, (SOMETHING RECEIVED IN CARDPILE)");
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -38,7 +38,7 @@ public class OnlineCardPile implements CardPile {
     public void add(List<Integer> cards) {
 
     }
-    //TODO deadlock happens hear (with great certainly)
+    //TODO deadlock happens here (with great certainly)
     //
     public void received(String[] list){
         Log.e("TEST", "NEW CARDS RECEIVED");
@@ -48,7 +48,7 @@ public class OnlineCardPile implements CardPile {
             toAdd = l;
         }
         try {
-            Thread.sleep(5);
+            Thread.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

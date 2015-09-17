@@ -19,14 +19,21 @@ public class BossInfo {
     public static final String BOSS3_NAME = "Evil";
     public static final String BOSS3_DESC = "Meneast guy on earth";
 
+    public static final String BOSS4_NAME = "Normal";
+    public static final String BOSS4_DESC = "average player";
+
     public static ComputerPlayer getComputerPlayer(String name, CardPile cardPile, PlayPile[] playPiles){
         switch (name){
             case BOSS1_NAME:
+                Log.e("TEST", "IDIOT PLAYER ADDED");
                 return new IdiotPlayer((com.skipbo.model.LocalCardPile) cardPile, 30, playPiles);
             case BOSS2_NAME:
                 return new BabyPlayer((com.skipbo.model.LocalCardPile) cardPile, 30, playPiles);
             case BOSS3_NAME:
                 return new AssPlayer((com.skipbo.model.LocalCardPile) cardPile, 30, playPiles);
+            case BOSS4_NAME:
+                Log.e("TEST", "nomral PLAYER ADDED");
+                return new NormalPlayer((com.skipbo.model.LocalCardPile) cardPile, 30, playPiles);
         }
         return null;
     }

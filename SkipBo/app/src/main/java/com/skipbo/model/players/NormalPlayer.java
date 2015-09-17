@@ -19,7 +19,7 @@ public class NormalPlayer extends ComputerPlayer {
     private boolean toSkip;
 
     public NormalPlayer(LocalCardPile cardpile, int stockPileAmount, PlayPile[] playPiles){
-        super(BossInfo.BOSS1_NAME, cardpile, stockPileAmount, playPiles);
+        super(BossInfo.BOSS4_NAME, cardpile, stockPileAmount, playPiles);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NormalPlayer extends ComputerPlayer {
         waitBeforePlay();
         Player next = controller.getGame().getNextPlayer();
         playing = true;
-
+        printDebug();
         while(playing&&!hasWon()) {
             toSkip = false;
             //if stockpile playable, play stockpile then check again
@@ -41,7 +41,8 @@ public class NormalPlayer extends ComputerPlayer {
                 List<Integer> cardsneededDub = new ArrayList<>();
                 cardsneededDub.addAll(cardsneeded);
                 cardsneeded.removeAll(this.getAllAvailableCards());
-                if(cardsneeded.size()<getSkipboAmount()){
+                printCardsneeded(cardsneededDub, getAllAvailableCards(), cardsneeded);
+                if(cardsneeded.size()<=getSkipboAmount()){
                     for(int x =0; x<cardsneededDub.size(); x++){
                         int[] pos = getAvailableCardAndPosition(cardsneededDub.get(x));
                         if(pos[0]!=-1){
@@ -57,13 +58,10 @@ public class NormalPlayer extends ComputerPlayer {
                         }
                     }
                     playStockPile();
-                    toSkip = true;
-                    break;
+
                 }
             }
-            if(toSkip){
-                continue;
-            }
+
             //check if fuck other player
             for(int i=0; i<playPiles.length; i++){
                 List<Integer> cardsneeded = this.getCardsNeeded(next, i);
@@ -85,13 +83,10 @@ public class NormalPlayer extends ComputerPlayer {
                             }
                         }
                     }
-                    toSkip = true;
-                    break;
+
                 }
             }
-            if(toSkip){
-                continue;
-            }
+
 
             //check if hand can be played empty
 

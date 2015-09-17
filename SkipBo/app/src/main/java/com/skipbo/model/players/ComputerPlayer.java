@@ -276,15 +276,24 @@ public abstract class ComputerPlayer extends Player {
         List<Integer> list = new ArrayList<>();
         int stock = player.getStockpile().getCard();
         int put = player.getPutAwayPiles()[putawayPile].getCard();
-        int counter = put;
+        int counter;
+        if(put==-1){
+            counter = 1;
+        }else {
+            counter = put;
+        }
         if(stock>put){
             while(counter<stock){
-                list.add(counter);
+                if(counter!=0) {
+                    list.add(counter);
+                }
                 counter++;
             }
         }else{
             while(counter!=stock){
-                list.add(counter);
+                if(counter!=0) {
+                    list.add(counter);
+                }
                 counter = (counter+1)%13;
             }
         }
@@ -305,6 +314,7 @@ public abstract class ComputerPlayer extends Player {
         int card = p.getCard();
         if(card!=-1) {
             for (int i = p.getCards().size()-2; i > 0; i--) {
+                Log.e("TEST", "Expected: "+card+1+" Real: "+p.getCards().get(i));
                 if(card+1==p.getCards().get(i)){
                     list.add(p.getCards().get(i));
                     card++;
@@ -317,6 +327,18 @@ public abstract class ComputerPlayer extends Player {
     }
 
 
+    public void printDebug(){
+        String msg = "Name: "+name + "\n";
+        msg += "Handcards: "+handcards + "\n";
+        Log.e("PLAYER", msg);
+    }
 
+    public void printCardsneeded(List needed, List available, List needMinAvail){
+        String msg = "Available: "+available+"\n";
+        msg += "Needed: "+needed+"\n";
+        msg += "NeedMinAvail: " +needMinAvail+"\n";
+        msg += "Skipbo Amount: "+getSkipboAmount()+"\n";
+        Log.e("PLAYER", msg);
+    }
 
 }

@@ -26,7 +26,11 @@ public class LobbyEntry extends LinearLayout {
 
     public LobbyEntry(final MainActivity context, String name, boolean deletable, final ClientHandler clientHandler) {
         super(context);
-        this.name = name;
+        if(name.length()>25){
+            this.name = name.substring(0, 25);
+        }else{
+            this.name = name;
+        }
         this.clientHandler = clientHandler;
         TextView text = new TextView(context);
         text.setTextColor(Color.parseColor("#000000"));

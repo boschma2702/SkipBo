@@ -53,6 +53,8 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
     private boolean gameStarted = false;
     private LinearLayout lobby;
 
+    private String incoming;
+
     public Client(MainActivity context, int screenwidht, int screenheight){
         //interperterClient = new InterperterClient(this);
         this.context = context;
@@ -102,10 +104,15 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
 
         while (running) {
             try {
-                String incoming = reader.readLine();
+                incoming = reader.readLine();
                 if(incoming!=null) {
                     Log.i(TAG, "Received: " + incoming);
-                    interpreter(incoming.split("\\$"));
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            interpreter(incoming.split("\\$"));
+                        }
+                    }).start();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

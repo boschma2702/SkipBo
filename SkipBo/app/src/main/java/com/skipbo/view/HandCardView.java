@@ -17,7 +17,7 @@ public class HandCardView extends MoveableCard {
     private Bitmap backCard;
 
     public HandCardView(int value, int positionNumber, Player humanPlayer, CardDecoder decoder) {
-        super(positionNumber*(PADDING + decoder.getCardWidth()), (int)(decoder.getScreenHeight()-decoder.getCardHeight()), positionNumber, decoder, value);
+        super(positionNumber*(PADDING + decoder.getCardWidth()), (decoder.getScreenHeight()-decoder.getCardHeight()), positionNumber, decoder, value);
         //this.currentValue = value;
         this.humanPlayer = humanPlayer;
         this.positionNumber = positionNumber;

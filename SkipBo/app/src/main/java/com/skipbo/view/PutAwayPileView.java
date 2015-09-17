@@ -31,7 +31,7 @@ public class PutAwayPileView extends MoveableCard {
     private boolean expanded = false;
 
     public PutAwayPileView(PutAwayPile p, int number, CardDecoder decoder) {
-        super(number*(PADDING+decoder.getCardWidth())+500, 0, number, decoder, p.getCard());
+        super(number*(PADDING+decoder.getCardWidth())+((decoder.getCardWidth()+PADDING)*2+PADDING*8), 0, number, decoder, p.getCard());
         moveable = false;
         this.p = p;
         setMoveAble();
