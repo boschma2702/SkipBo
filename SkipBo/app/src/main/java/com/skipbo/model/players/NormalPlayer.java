@@ -23,7 +23,7 @@ public class NormalPlayer extends ComputerPlayer {
     }
 
     @Override
-    public void makeMove(GameController controller) {
+    public boolean makeMove(GameController controller) {
         waitBeforePlay();
         Player next = controller.getGame().getNextPlayer();
         playing = true;
@@ -43,17 +43,23 @@ public class NormalPlayer extends ComputerPlayer {
                 cardsneeded.removeAll(this.getAllAvailableCards());
                 printCardsneeded(cardsneededDub, getAllAvailableCards(), cardsneeded);
                 if(cardsneeded.size()<=getSkipboAmount()){
+                    cardLoop:
                     for(int x =0; x<cardsneededDub.size(); x++){
-                        int[] pos = getAvailableCardAndPosition(cardsneededDub.get(x));
-                        if(pos[0]!=-1){
-                            playCard(pos, i);
-                        }else{
-                            if(getSkipboAmount()==0){
-                                Log.e("NORMALPLAYER", "This shouldn't occur often, no problem");
-                                playing = false;
+                        List<int[]> list = getAvailableCardAndPosition(cardsneededDub.get(i));
+                        for(int z=0;z<list.size();z++) {
+                            int[] pos = list.get(z);
+                            if (pos[0] != -1) {
+                                playCard(pos, i);
                                 break;
-                            }else{
-                                playCard(getAvailableCardAndPosition(0),i);
+                            } else if(!(z+1<list.size())) {
+                                if (getSkipboAmount() == 0) {
+                                    Log.e("NORMALPLAYER", "This shouldn't occur often, no problem");
+                                    playing = false;
+                                    break cardLoop;
+                                } else {
+                                    playSkipboFromHand(i);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -69,32 +75,38 @@ public class NormalPlayer extends ComputerPlayer {
                 cardsneededDub.addAll(cardsneeded);
                 cardsneeded.removeAll(this.getAllAvailableCards());
                 if(cardsneeded.size()<getSkipboAmount()){
+                    cardLoop:
                     for(int x =0; x<cardsneededDub.size(); x++){
-                        int[] pos = getAvailableCardAndPosition(cardsneededDub.get(x));
-                        if(pos[0]!=-1){
-                            playCard(pos, i);
-                        }else{
-                            if(getSkipboAmount()==0){
-                                Log.e("NORMALPLAYER", "This shouldn't occur often, no problem");
-                                playing = false;
+                        List<int[]> list = getAvailableCardAndPosition(cardsneededDub.get(i));
+                        for(int z=0;z<list.size();z++) {
+                            int[] pos = list.get(z);
+                            if (pos[0] != -1) {
+                                playCard(pos, i);
                                 break;
-                            }else{
-                                playCard(getAvailableCardAndPosition(0),i);
+                            } else if(!(z+1<list.size())) {
+                                if (getSkipboAmount() == 0) {
+                                    Log.e("NORMALPLAYER", "This shouldn't occur often, no problem");
+                                    playing = false;
+                                    break cardLoop;
+                                } else {
+                                    playSkipboFromHand(i);
+                                    break;
+                                }
                             }
                         }
                     }
-
                 }
             }
 
 
             //check if hand can be played empty
+            //play as much as possible
 
             playing = false;
         }
         playBestToPutawayPile();
         waitBeforePlay();
         fillHand();
-
+        return hasWon();
     }
 }

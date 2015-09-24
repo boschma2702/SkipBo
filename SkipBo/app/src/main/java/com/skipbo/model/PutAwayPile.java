@@ -11,7 +11,17 @@ public class PutAwayPile {
 	
 	private List<Integer> cards = new ArrayList<Integer>();
 
-	
+    public PutAwayPile(){};
+
+    /**
+     * Pure for testing
+     * @param cards to be set onto the putawaypiles. The first one integer in the list is the highest
+     *              card (not to be reached), the last integer is the first card on the putawaypile
+     */
+	public PutAwayPile(List<Integer> cards){
+        this.cards = cards;
+    }
+
 	public boolean addCard(int card){
 		if(card!=-1){
             cards.add(card);

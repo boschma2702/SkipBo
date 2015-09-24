@@ -13,7 +13,7 @@ public class PlayPileView extends Card{
     private int number;
 
     public PlayPileView(PlayPile p, int number, CardDecoder decoder){
-        super(((number%2)*(PADDING+decoder.getCardWidth())),((int)(number/2))*(decoder.getCardHeight()+PADDING),number, decoder, p.getTeller());
+        super(((number%2)*((int)CardDecoder.PADDING+decoder.getCardWidth())),((int)(number/2))*(decoder.getCardHeight()+(int)CardDecoder.PADDING),number, decoder, p.getTeller());
         this.p = p;
         this.number = number;
         //this.currentValue = p.getTeller();

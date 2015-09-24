@@ -176,7 +176,7 @@ public class GameController implements View.OnTouchListener {
                     return p.playHandToPlayPile(onClick.getNumber(), onRelease.getNumber());
                 }else if(onClick instanceof StockPileView){
                     if(p.playStockPile(onRelease.getNumber())){
-                        showPopup();
+                        //showPopup();
                     }
                     return false;
                     //return p.playStockPile(onRelease.getNumber());
@@ -225,7 +225,7 @@ public class GameController implements View.OnTouchListener {
         v.vibrate(400);
     }
 
-    public void showPopup(){
+    public void showPopup(String name){
 
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -235,7 +235,7 @@ public class GameController implements View.OnTouchListener {
 
         final MainActivity a = (MainActivity) context;
 
-        ((TextView)dialog.findViewById(R.id.popupTitle)).setText("You Won");
+        ((TextView)dialog.findViewById(R.id.popupTitle)).setText(name+" Won");
 
         Button replay = (Button) dialog.findViewById(R.id.popupPlayAgain);
         replay.setOnTouchListener(new View.OnTouchListener() {

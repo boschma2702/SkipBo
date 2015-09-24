@@ -77,7 +77,11 @@ public class Game implements Runnable{
 
     private void play() {
         while (!gameover) {
-            players[current].makeMove(gameController);
+            if(players[current].makeMove(gameController)){
+                gameover = false;
+                running = false;
+                gameController.showPopup(players[current].getName());
+            }
             current = (current + 1) % playercount;
             if(!(players[current] instanceof ClientHandler || players[current] instanceof StubPlayer || players[current] instanceof ComputerPlayer)){
                 if(vibrate) {

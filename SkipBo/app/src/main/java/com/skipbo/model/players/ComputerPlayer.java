@@ -2,6 +2,7 @@ package com.skipbo.model.players;
 
 import android.util.Log;
 
+import com.skipbo.Utils.ListMan;
 import com.skipbo.model.LocalCardPile;
 import com.skipbo.model.PlayPile;
 import com.skipbo.model.Player;
@@ -18,6 +19,7 @@ import java.util.TreeSet;
  * Created by reneb_000 on 15-8-2015.
  */
 public abstract class ComputerPlayer extends Player {
+
 
 
     public ComputerPlayer(String name, LocalCardPile cardpile, int stockPileAmount, PlayPile[] playPiles){
@@ -113,6 +115,21 @@ public abstract class ComputerPlayer extends Player {
                 return true;
             }
         }
+        return false;
+    }
+
+    /**
+     * Checks if a given card number is playable to one of the playpiles
+     * @param card to be checked
+     * @return true if card is playable
+     */
+    public boolean isCardPlayable(int card){
+        for(int i=0;i<playPiles.length;i++){
+            if(playPiles[i].isPlaceable(card)){
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -220,25 +237,34 @@ public abstract class ComputerPlayer extends Player {
      * @return the position of the given card. -1 = not present, 0 = stockpile, 1 = handcard,
      * 2 = putawaypile
      */
-    public int[] getAvailableCardAndPosition(int card){
+    public List<int[]> getAvailableCardAndPosition(int card){
+        List<int[]> list = new ArrayList<>();
         int[] result = new int[2];
         result[0] = -1;
         if(stockpile.getCard()==card){
             result[0] = 0;
-            return result;
+            list.add(result);
         }
         if(putawayContainsCard(card)!=-1) {
-            for (int i = 0; i < putAwayPiles.length; i++) {
-                result[0] = 2;
-                result[1] = putawayContainsCard(card);
-                return result;
+            result[0] = 2;
+            for(int i=0; i<putAwayPiles.length;i++){
+                if(putAwayPiles[i].getCard()==card){
+                    result[1] = i;
+                    list.add(result);
+                }
             }
         }
         if(handcards.contains(card)){
             result[0] = 1;
+            for(int i=0; i<handcards.size();i++){
+                if(handcards.get(i)==card){
+                    result[1] = i;
+                    list.add(result);
+                }
+            }
             result[1] = handContainsCard(card);
         }
-        return result;
+        return list;
     }
 
 
@@ -265,6 +291,14 @@ public abstract class ComputerPlayer extends Player {
             }
         }
         return counter;
+    }
+
+    public void playSkipboFromHand(int playpile){
+        for(int i=0; i<handcards.size(); i++){
+            if(handcards.get(i)==0){
+                playHandToPlayPile(i,playpile);
+            }
+        }
     }
 
     /**
@@ -310,20 +344,19 @@ public abstract class ComputerPlayer extends Player {
      * @return list containing all the cards
      */
     public List<Integer> getPutawayBehindFirst(PutAwayPile p){
-        List<Integer> list = new ArrayList<>();
-        int card = p.getCard();
-        if(card!=-1) {
-            for (int i = p.getCards().size()-2; i > 0; i--) {
-                Log.e("TEST", "Expected: "+card+1+" Real: "+p.getCards().get(i));
-                if(card+1==p.getCards().get(i)){
-                    list.add(p.getCards().get(i));
-                    card++;
-                }else {
+        List<Integer> pp = ListMan.mirrorList(p.getCards());
+        List<Integer> result = new ArrayList<>();
+        //int card = p.getCard();
+        if(isCardPlayable(p.getCard())) {
+            for (int i = 0; i < pp.size(); i++) {
+                if (i + 1 < pp.size() && pp.get(i) + 1 == pp.get(i + 1)) {
+                    result.add(pp.get(i + 1));
+                } else {
                     break;
                 }
             }
         }
-        return list;
+        return result;
     }
 
 
@@ -340,5 +373,15 @@ public abstract class ComputerPlayer extends Player {
         msg += "Skipbo Amount: "+getSkipboAmount()+"\n";
         Log.e("PLAYER", msg);
     }
+
+
+    /**
+     * pure for testing
+     * @param hand to be set
+     */
+    public void setHand(List<Integer> hand) {
+        this.handcards = hand;
+    }
+
 
 }

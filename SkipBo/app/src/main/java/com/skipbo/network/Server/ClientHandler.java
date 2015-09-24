@@ -3,10 +3,7 @@ package com.skipbo.network.Server;
 import android.util.Log;
 
 import com.skipbo.GameController;
-import com.skipbo.model.Game;
-import com.skipbo.model.PlayPile;
 import com.skipbo.model.Player;
-import com.skipbo.model.PutAwayPile;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -120,7 +117,7 @@ public class ClientHandler extends Player implements Runnable {
 
 
     @Override
-    public void makeMove(GameController controller) {
+    public boolean makeMove(GameController controller) {
         synchronized (this){
             try {
                 Log.e("TEST", "Before Waiting of "+name);
@@ -131,6 +128,7 @@ public class ClientHandler extends Player implements Runnable {
                 e.printStackTrace();
             }
         }
+        return hasWon();
     }
 
     public Server getServer(){

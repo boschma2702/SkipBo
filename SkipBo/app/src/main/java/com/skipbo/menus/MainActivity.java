@@ -42,12 +42,12 @@ import java.io.IOException;
 public class MainActivity extends Activity {
 
     // background ingame, bosses need to be unlocked,
-    // more bosses, proper display for smaller screen devices, sideview putawaypiles expandle,
+    // more bosses, sideview putawaypiles expandle,
     // boss menu look, tutorial
-    //TODO popup einde spel
+    //TODO opmaak popup einde spel
     //TODO online host customizable name
-    //TODO name change Skip-ba
     //TODO code cleanup
+    //TODO normal boss working
 
 
 

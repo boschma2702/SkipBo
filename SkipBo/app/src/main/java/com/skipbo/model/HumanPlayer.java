@@ -1,11 +1,6 @@
 package com.skipbo.model;
 
-import android.util.Log;
-
 import com.skipbo.GameController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HumanPlayer extends Player {
 	
@@ -22,10 +17,11 @@ public class HumanPlayer extends Player {
 	}
 	
 	
-	public void makeMove(GameController gameController){
+	public boolean makeMove(GameController gameController){
         gameController.makeMove();
         //Log.e("test", "move ended");
         fillHand();
+        return hasWon();
 	}
 	
 

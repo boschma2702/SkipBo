@@ -1,13 +1,8 @@
 package com.skipbo.model.players;
 
-import android.util.Log;
-
 import com.skipbo.GameController;
 import com.skipbo.model.LocalCardPile;
 import com.skipbo.model.PlayPile;
-import com.skipbo.model.StockPile;
-
-import java.util.Random;
 
 /**
  * Created by reneb_000 on 15-8-2015.
@@ -22,7 +17,7 @@ public class IdiotPlayer extends ComputerPlayer {
     }
 
     @Override
-    public void makeMove(GameController controller) {
+    public boolean makeMove(GameController controller) {
         waitBeforePlay();
         playing = true;
         while(playing&&!hasWon()) {
@@ -40,6 +35,7 @@ public class IdiotPlayer extends ComputerPlayer {
         }
         waitBeforePlay();
         fillHand();
+        return hasWon();
 
     }
 }

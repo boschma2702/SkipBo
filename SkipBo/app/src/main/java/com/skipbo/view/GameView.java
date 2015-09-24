@@ -44,6 +44,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     private int screenWidht, screenHeight;
 
+    private int padding;
+
     public GameView(Game g, Context context, int width, int height){
         super(context);
         this.g = g;
@@ -56,6 +58,8 @@ public class GameView extends SurfaceView implements Runnable {
         otherStockPiles = new HashMap<Player, StockPileView>();
         screenWidht = width;
         screenHeight = height;
+        padding = (int) CardDecoder.PADDING;
+
 
         //CardDecoder decoder = new CardDecoder(context, (float)width/initW, width, height);
         CardDecoder decoder = MainActivity.cardDecoder;
@@ -153,7 +157,7 @@ public class GameView extends SurfaceView implements Runnable {
                 otherStockPiles.get(humanPlayer).onDraw(c);
             }
         }*/
-        int sideStart = screenWidht - 5*(resizedDecoder.getCardWidth()+Card.PADDING);
+        int sideStart = screenWidht - 5*(resizedDecoder.getCardWidth()+(int)CardDecoder.PADDING);
         int counter = 0;
 
         List<Integer> first = new ArrayList<>();
@@ -170,9 +174,9 @@ public class GameView extends SurfaceView implements Runnable {
 
         for(int x=0; x< first.size();x++){
             if(!humanPlayers[first.get(x)].equals(g.getCurrentPlayer())) {
-                int y = counter*(resizedDecoder.getCardHeight()+resizedDecoder.getCardHeight()/2+30)+Card.PADDING*3;
+                int y = counter*(resizedDecoder.getCardHeight()+resizedDecoder.getCardHeight()/2+30)+padding*3;
                 for (int i = 0; i < otherPutAwayPiles.get(humanPlayers[first.get(x)]).length; i++) {
-                    otherPutAwayPiles.get(humanPlayers[first.get(x)])[i].onDraw(c, i*(Card.PADDING+resizedDecoder.getCardWidth())+sideStart,y);
+                    otherPutAwayPiles.get(humanPlayers[first.get(x)])[i].onDraw(c, i*(padding+resizedDecoder.getCardWidth())+sideStart,y);
                 }
                 otherStockPiles.get(humanPlayers[first.get(x)]).onDraw(c, screenWidht-resizedDecoder.getCardWidth(),y);
                 counter++;
@@ -252,8 +256,9 @@ public class GameView extends SurfaceView implements Runnable {
             if(c!=null) {
                 c.drawARGB(255, 255, 50, 50);
                 onDraw(c);
+                holder.unlockCanvasAndPost(c);
             }
-            holder.unlockCanvasAndPost(c);
+
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {

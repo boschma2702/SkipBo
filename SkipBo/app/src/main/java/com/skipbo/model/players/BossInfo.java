@@ -11,16 +11,16 @@ import com.skipbo.model.PlayPile;
 public class BossInfo {
 
     public static final String BOSS1_NAME = "Otto";
-    public static final String BOSS1_DESC = "Not bright of a person";
+    public static final String BOSS1_DESC = "Otto the stupid, IQ of 50";
 
-    public static final String BOSS2_NAME = "Baby";
-    public static final String BOSS2_DESC = "He doesn't know what is he is doing";
+    public static final String BOSS2_NAME = "Tom";
+    public static final String BOSS2_DESC = "Tom the baby, only three months old and no idea what he is doing";
 
-    public static final String BOSS3_NAME = "Evil";
-    public static final String BOSS3_DESC = "Meneast guy on earth";
+    public static final String BOSS3_NAME = "Baron";
+    public static final String BOSS3_DESC = "Baron von Mustachewich, some say the evilness is in his mustache";
 
-    public static final String BOSS4_NAME = "Normal";
-    public static final String BOSS4_DESC = "average player";
+    public static final String BOSS4_NAME = "Joe";
+    public static final String BOSS4_DESC = "Average Joe, ";
 
     public static ComputerPlayer getComputerPlayer(String name, CardPile cardPile, PlayPile[] playPiles){
         switch (name){

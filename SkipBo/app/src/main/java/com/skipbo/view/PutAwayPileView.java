@@ -29,9 +29,10 @@ public class PutAwayPileView extends MoveableCard {
     private float scale = (float) 0.125;
 
     private boolean expanded = false;
+    private float textpadding;
 
     public PutAwayPileView(PutAwayPile p, int number, CardDecoder decoder) {
-        super(number*(PADDING+decoder.getCardWidth())+((decoder.getCardWidth()+PADDING)*2+PADDING*8), 0, number, decoder, p.getCard());
+        super(number*((int)CardDecoder.PADDING+decoder.getCardWidth())+((decoder.getCardWidth()+(int)CardDecoder.PADDING)*2+(int)CardDecoder.PADDING*3), 0, number, decoder, p.getCard());
         moveable = false;
         this.p = p;
         setMoveAble();
@@ -53,15 +54,16 @@ public class PutAwayPileView extends MoveableCard {
         this.humanPlayer = humanPlayer;
         font = new Paint();
         Typeface typeface = Typeface.create("Serif", Typeface.BOLD);
-        font.setTextSize(30);
+        font.setTextSize(resizedDecoder.getTextSize()*2);
         font.setTypeface(typeface);
         font.setColor(Color.WHITE);
+        textpadding = CardDecoder.TEXTPADDING;
     }
 
 
     public void onDraw(Canvas c, int drawx, int drawy){
         if(sideView &&getNumber()==0){
-            c.drawText(humanPlayer.getName(),drawx, drawy-5,font);
+            c.drawText(humanPlayer.getName(),drawx, drawy-textpadding,font);
         }
         c.drawBitmap(emptyPNG,drawx,drawy,null);
         List<Integer> l = p.getCards();

@@ -152,10 +152,11 @@ public class Server extends NetworkPlayer implements Runnable, Sendable{
 
 
     @Override
-    public void makeMove(GameController controller) {
+    public boolean makeMove(GameController controller) {
         controller.makeMove();
         fillHand();
         Log.e("TEST", "Turn " + name + " really finished");
+        return hasWon();
     }
 
     public void sendMessage(String msg){

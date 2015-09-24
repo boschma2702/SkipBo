@@ -5,7 +5,6 @@ import android.util.Log;
 import com.skipbo.GameController;
 import com.skipbo.model.LocalCardPile;
 import com.skipbo.model.PlayPile;
-import com.skipbo.network.Server.InterperterClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class BabyPlayer extends ComputerPlayer {
     }
 
     @Override
-    public void makeMove(GameController controller) {
+    public boolean makeMove(GameController controller) {
         waitBeforePlay();
         playing = true;
         while(playing) {
@@ -45,6 +44,7 @@ public class BabyPlayer extends ComputerPlayer {
             }
         }
         fillHand();
+        return hasWon();
     }
 
     public boolean playStockPile(int number){

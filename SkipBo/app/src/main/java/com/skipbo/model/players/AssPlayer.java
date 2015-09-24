@@ -23,7 +23,7 @@ public class AssPlayer extends ComputerPlayer {
     }
 
     @Override
-    public void makeMove(GameController controller) {
+    public boolean makeMove(GameController controller) {
         playing = true;
         waitBeforePlay();
         Player next = controller.getGame().getNextPlayer();
@@ -51,11 +51,11 @@ public class AssPlayer extends ComputerPlayer {
                     Log.e("TEST","cardsneeded "+cardsNeeded + "dub: "+cardsNeededDub);
                     if(cardsNeeded.size()==0){
                         for(int x=0; x<cardsNeededDub.size(); x++){
-                            playCard(getAvailableCardAndPosition(cardsNeededDub.get(x)),i);
+                            playCard(getAvailableCardAndPosition(cardsNeededDub.get(x)).get(0),i);
                         }
                     }else if(cardsNeeded.size()<=getSkipboAmount()){
                         for(int x=0; x<cardsNeededDub.size(); x++){
-                            int[] pos = getAvailableCardAndPosition(cardsNeededDub.get(x));
+                            int[] pos = getAvailableCardAndPosition(cardsNeededDub.get(x)).get(0);
                             if(pos[0]!=-1) {
                                 playCard(pos, i);
                             }else{
@@ -71,6 +71,7 @@ public class AssPlayer extends ComputerPlayer {
         }
         playBestToPutawayPile();
         fillHand();
+        return hasWon();
 
     }
 }

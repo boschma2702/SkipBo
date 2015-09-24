@@ -22,19 +22,21 @@ public class StockPileView extends MoveableCard implements Observer {
     private int cardsLeft;
     private Paint font;
     private boolean sideView;
+    private float textpadding;
 
     public StockPileView(StockPile p, CardDecoder decoder, boolean sideView){
-        super((decoder.getCardWidth()+PADDING)*6,decoder.getScreenHeight()-decoder.getCardHeight(), 1, decoder, p.getCard());
+        super((decoder.getCardWidth()+(int)CardDecoder.PADDING)*6,decoder.getScreenHeight()-decoder.getCardHeight(), 1, decoder, p.getCard());
         stockpile = p;
         stockpile.addObserver(this);
         backPNG = decoder.getStandardBitmap(14);
         cardsLeft = stockpile.getAmount();
         font = new Paint();
         font.setColor(Color.WHITE);
-        font.setTextSize(30*decoder.getScale());
+        font.setTextSize(decoder.getTextSize());
         Typeface typeface = Typeface.create("Serif", Typeface.BOLD);
         font.setTypeface(typeface);
         this.sideView = sideView;
+        textpadding = CardDecoder.TEXTPADDING;
     }
 
     /*
@@ -52,7 +54,7 @@ public class StockPileView extends MoveableCard implements Observer {
     }*/
 
     public void onDraw(Canvas c, int drawx, int drawy){
-        c.drawText("Left: "+cardsLeft, drawx, drawy-5, font);
+        c.drawText("Left: "+cardsLeft, drawx, drawy-textpadding, font);
         if(stockpile.getAmount()<=1) {
             c.drawBitmap(emptyPNG, drawx, drawy, null);
         }else{

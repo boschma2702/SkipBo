@@ -1,13 +1,7 @@
 package com.skipbo.network.Client;
 
-import android.util.Log;
-
 import com.skipbo.GameController;
-import com.skipbo.model.CardPile;
-import com.skipbo.model.PlayPile;
 import com.skipbo.model.Player;
-
-import java.util.List;
 
 /**
  * Created by reneb_000 on 27-7-2015.
@@ -49,7 +43,7 @@ public class StubPlayer extends Player {
     }
 
     @Override
-    public void makeMove(GameController controller) {
+    public boolean makeMove(GameController controller) {
         synchronized (this){
             try {
                 wait();
@@ -58,5 +52,6 @@ public class StubPlayer extends Player {
                 e.printStackTrace();
             }
         }
+        return hasWon();
     }
 }

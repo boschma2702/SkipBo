@@ -17,7 +17,7 @@ public abstract class Card {
 
     static final int WIDTH = 200;
     static final int HEIGHT = 320;
-    static final int PADDING = 10;
+    //static final int PADDING = 10;
     static final float SCALE = (float) 1;
 
 

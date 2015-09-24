@@ -1,6 +1,5 @@
 package com.skipbo.network.Client;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +17,6 @@ import com.skipbo.model.Player;
 import com.skipbo.network.NetworkPlayer;
 import com.skipbo.network.Sendable;
 import com.skipbo.network.Server.CommandList;
-import com.skipbo.network.Server.InterperterClient;
 import com.skipbo.network.Server.Server;
 import com.skipbo.view.LobbyEntry;
 
@@ -320,9 +318,10 @@ public class Client extends NetworkPlayer implements Runnable, Sendable {
     }
 
     @Override
-    public void makeMove(GameController controller) {
+    public boolean makeMove(GameController controller) {
         controller.makeMove();
         fillHand();
+        return hasWon();
     }
 
     public boolean isGameStarted(){

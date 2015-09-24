@@ -63,7 +63,7 @@ public abstract class Player {
         }
     }
 
-    public abstract void makeMove(GameController controller);
+    public abstract boolean makeMove(GameController controller);
 
     public String getName(){
         return name;
@@ -166,5 +166,13 @@ public abstract class Player {
 
     public boolean hasWon(){
         return (stockpile.getAmount()==0);
+    }
+
+    /**
+     * pure for testing
+     * @param putAwayPiles to be set
+     */
+    public void setPutAwayPiles(PutAwayPile[] putAwayPiles){
+        this.putAwayPiles = putAwayPiles;
     }
 }

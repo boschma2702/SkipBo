@@ -1,10 +1,12 @@
 package com.skipbo.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.skipbo.R;
 
@@ -13,6 +15,7 @@ import com.skipbo.R;
  */
 public class CardDecoder {
 
+    private final float screenDensity;
     private Context context;
     private Bitmap[] standardCards;
     //private Bitmap[] resizedCards;
@@ -30,6 +33,10 @@ public class CardDecoder {
     public final static int SKIPBO = 0;
     public static final int empty = 13;
 
+    public static float PADDING;
+    public static float TEXTPADDING;
+    public static final int TEXTSIZE = 15;
+
     public CardDecoder(Context context, float scale, int screenWidht, int screenHeight){
         this.context = context;
         matrix = new Matrix();
@@ -38,6 +45,11 @@ public class CardDecoder {
         this.scale = scale;
         this.screenWidth = screenWidht;
         this.screenHeight = screenHeight;
+        PADDING = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, context.getResources().getDisplayMetrics());
+        Log.e("PADDING", "Padding is: "+PADDING);
+        screenDensity = context.getResources().getDisplayMetrics().density;
+        Log.e("DENSITY", "Screendensity is: "+screenDensity);
+        TEXTPADDING = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, context.getResources().getDisplayMetrics());
     }
 
     /**
@@ -48,7 +60,7 @@ public class CardDecoder {
         Bitmap b;
         for(int i = 0;i<=14; i++){
             b=getBitMap(i);
-            //Log.e("TEST", "bmp width: "+b.getWidth()+" height: "+b.getHeight());
+            Log.e("TEST", "bmp width: "+b.getWidth()+" height: "+b.getHeight());
             //Log.e("SIZE","Scale "+scale);
             standardCards[i] = Bitmap.createBitmap(b, 0,0,b.getWidth(),b.getHeight(),matrix,false);
         }
@@ -114,5 +126,13 @@ public class CardDecoder {
 
     public int getCardHeight(){
         return cardHeight;
+    }
+
+    public float getScreenDensity() {
+        return screenDensity;
+    }
+
+    public float getTextSize(){
+        return TEXTSIZE*scale*screenDensity;
     }
 }
